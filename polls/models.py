@@ -1,3 +1,4 @@
+from datetime import datetime
 
 from django.db import models
 
@@ -10,13 +11,14 @@ class User(models.Model):
     gender = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"User Entity : {self.first_name}+ {self.last_name}"
+        return f"User Entity : {self.first_name} {self.last_name}"
 
 
 class Polls(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.CharField(max_length=50)
     description = models.TextField()
+    created_at = models.DateTimeField(default=datetime.now())
 
 class Choices(models.Model):
     poll = models.ForeignKey(Polls, on_delete=models.CASCADE, related_name='choices')
