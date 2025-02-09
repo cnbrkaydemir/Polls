@@ -16,7 +16,7 @@
     {% if polls %}
         <div class="list-group mt-4">
             {% for poll in polls %}
-                <a href="{% url 'home' %}" class="list-group-item list-group-item-action">
+                <a href="{% url 'poll_detail' poll_id=poll.id %}" class="list-group-item list-group-item-action">
                     <h5 class="mb-1">{{ poll.question }}</h5>
                     <small>Created on {{ poll.created_at|date:"F j, Y" }}</small>
                 </a>

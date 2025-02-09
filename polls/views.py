@@ -1,7 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
-from polls.models import User, Polls, Choices
+from polls.models import User, Polls, Choices, Vote
 
 
 # Create your views here.
@@ -21,24 +21,39 @@ def create_poll(request):
         description = request.POST['description']
         user = User.objects.all()[0]
 
-        poll = Polls(question=question, description=description, user=user)
+        poll = Polls(question=question, description=description, user=user, choices=set())
         poll.save()
 
         options = [request.POST['option1'], request.POST['option2'], request.POST['option3'], request.POST['option4']]
 
 
         for option in options:
-            if option != '':
+            if option.strip():
                 choice = Choices(text=option, poll=poll, votes=0)
                 choice.save()
 
-        poll.save()
+
 
         return redirect('dashboard')
 
 
     return render(request, "poll_create.html")
 
+
+def get_poll_detail(request, poll_id):
+    poll = get_object_or_404(Polls, pk=poll_id)
+    voted = False
+
+    if request.method == "POST":
+        choice_id = request.POST.get("option")
+        choice = get_object_or_404(Choices, id=choice_id)
+        choice.votes += 1
+        choice.save()
+        vote = Vote(user=User.objects.all()[0], choice=choice, poll=poll)
+        vote.save()
+        voted = True
+
+    return render(request, "poll_detail.html", {"poll": poll, "voted": voted})
 
 def register(request):
     if request.method == 'POST':

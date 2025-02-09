@@ -1,5 +1,43 @@
-{% extends "base.html" %} {% block title  %}Home Page{% endblock %}
+{% extends "base.html" %}
 
 {% block content %}
-<p>Welcome to Polls</p>
+<div class="container text-center mt-5">
+    <h1 class="display-4 fw-bold">Welcome to the Polling App</h1>
+    <p class="lead text-muted">Create polls, vote, and view results in real time!</p>
+
+    <div class="d-flex justify-content-center gap-3 mt-4">
+        <a href="{% url 'home' %}" class="btn btn-lg btn-primary">Login</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-lg btn-success">Go to Dashboard</a>
+    </div>
+
+    <div class="mt-5">
+        <h2 class="fw-bold">How It Works</h2>
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">1. Create Polls</h5>
+                        <p class="card-text">Start a poll by providing a question and multiple options.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">2. Vote</h5>
+                        <p class="card-text">Users can participate by voting for their preferred choice.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">3. View Results</h5>
+                        <p class="card-text">See the real-time results as users vote.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
