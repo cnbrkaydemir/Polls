@@ -13,7 +13,8 @@ def home(request):
 
 def dashboard(request):
     polls = Polls.objects.all()
-    return render(request, 'dashboard.html', {'polls': polls})
+    user = request.user
+    return render(request, 'dashboard.html', {'polls': polls, 'user': user})
 
 
 def create_poll(request):
