@@ -9,16 +9,33 @@
         <p class="text-muted text-center">{{ poll.description }}</p>
 
         {% if voted %}
-            <div class="alert alert-success text-center">Thank you for voting!</div>
+
+            {% if completion %}
+            <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                <strong>Thanks For Voting</strong>
+            </div>
+
+            {% else %}
+            <div class="alert alert-info alert-dismissible fade show text-center" role="alert">
+                <strong>Voting In Progress</strong>
+            </div>
+            {% endif %}
+
             <h4 class="mt-4">Poll Results:</h4>
 
             {% with total_votes=poll.choices.all|length %}
             <ul class="list-group">
                 {% for option in poll.choices.all %}
                     {% with percentage=option.votes|floatformat:2 %}
+                        {% if user_choice == option %}
+                        <li class="list-group-item bg-info">
+                            <div class="d-flex justify-content-between ">
+                                <strong>{{ option.text }} ✅</strong>
+                        {% else %}
                         <li class="list-group-item">
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between ">
                                 <strong>{{ option.text }}</strong>
+                        {% endif %}
                                 <span class="badge bg-primary rounded-pill">{{ option.votes }} votes</span>
                             </div>
                             <div class="progress mt-2" style="height: 20px;">

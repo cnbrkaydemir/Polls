@@ -44,18 +44,25 @@ def get_poll_detail(request, poll_id):
     poll = get_object_or_404(Polls, pk=poll_id)
     user = User.objects.first()
     voted = Vote.objects.filter(user=user, poll=poll).count() >= 1
+    user_choice = Vote.objects.filter(user=user, poll= poll).first().choice if voted else None
+    completion = False
+
 
 
     if request.method == "POST":
         choice_id = request.POST.get("option")
-        choice = get_object_or_404(Choices, id=choice_id)
-        choice.votes += 1
-        choice.save()
-        vote = Vote(user=User.objects.all()[0], choice=choice, poll=poll)
+        user_choice = get_object_or_404(Choices, id=choice_id)
+        user_choice.votes += 1
+        user_choice.save()
+
+        vote = Vote(user=User.objects.all()[0], choice=user_choice, poll=poll)
         vote.save()
         voted = True
+        completion = True
 
-    return render(request, "poll_detail.html", {"poll": poll, "voted": voted})
+
+    return render(request, "poll_detail.html",
+                  {"poll": poll, "voted": voted, "user_choice":user_choice, "completion":completion})
 
 def register(request):
     if request.method == 'POST':
