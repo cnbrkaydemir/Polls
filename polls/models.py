@@ -31,8 +31,8 @@ class Choices(models.Model):
 
 class Vote(models.Model):
     poll = models.ForeignKey(Polls, on_delete=models.CASCADE, related_name='votes')
-    choice = models.ForeignKey(Choices, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choices, on_delete=models.CASCADE, related_name='choice_votes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='votes')
 
     class Meta:
         unique_together = (('poll', 'choice'),)

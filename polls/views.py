@@ -21,7 +21,7 @@ def create_poll(request):
         description = request.POST['description']
         user = User.objects.all()[0]
 
-        poll = Polls(question=question, description=description, user=user, choices=set())
+        poll = Polls(question=question, description=description, user=user)
         poll.save()
 
         options = [request.POST['option1'], request.POST['option2'], request.POST['option3'], request.POST['option4']]
@@ -42,7 +42,9 @@ def create_poll(request):
 
 def get_poll_detail(request, poll_id):
     poll = get_object_or_404(Polls, pk=poll_id)
-    voted = False
+    user = User.objects.first()
+    voted = Vote.objects.filter(user=user, poll=poll).count() >= 1
+
 
     if request.method == "POST":
         choice_id = request.POST.get("option")
