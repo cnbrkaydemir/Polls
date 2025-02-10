@@ -78,7 +78,7 @@ def register(request):
             return render(request, "register.html", {"error": "Passwords do not match!"})
 
 
-        user = User(first_name=first_name, last_name=last_name, email=email, date_of_birth=date_of_birth, gender=gender)
+        user = User.objects.create_user(first_name=first_name, last_name=last_name, email=email, password=password1, date_of_birth=date_of_birth, gender=gender)
         user.save()
         return redirect("dashboard")
 
