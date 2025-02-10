@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -21,9 +21,9 @@ def create_poll(request):
     if request.method == 'POST':
         question = request.POST['question']
         description = request.POST['description']
-        user = User.objects.all()[0]
+        user = request.user
 
-        poll = Polls(question=question, description=description, user=user)
+        poll = Polls(question=question, description=description, created_user=user.id)
         poll.save()
 
         options = [request.POST['option1'], request.POST['option2'], request.POST['option3'], request.POST['option4']]
@@ -44,7 +44,7 @@ def create_poll(request):
 
 def get_poll_detail(request, poll_id):
     poll = get_object_or_404(Polls, pk=poll_id)
-    user = User.objects.first()
+    user = request.user
     voted = Vote.objects.filter(user=user, poll=poll).count() >= 1
     user_choice = Vote.objects.filter(user=user, poll= poll).first().choice if voted else None
     completion = False
@@ -57,7 +57,7 @@ def get_poll_detail(request, poll_id):
         user_choice.votes += 1
         user_choice.save()
 
-        vote = Vote(user=User.objects.all()[0], choice=user_choice, poll=poll)
+        vote = Vote(user=user, choice=user_choice, poll=poll)
         vote.save()
         voted = True
         completion = True
@@ -100,3 +100,7 @@ def login_view(request):
             return render(request, 'login.html', {'error': error})
 
     return render(request, 'login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')

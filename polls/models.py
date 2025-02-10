@@ -19,6 +19,7 @@ class UserManager(BaseUserManager):
             raise ValueError("Users must have a password")
 
         user = self.model(
+            username=self.normalize_email(email),
             email=self.normalize_email(email),
             first_name=first_name,
             last_name=last_name,
@@ -73,7 +74,7 @@ class User(AbstractUser):
 
 
 class Polls(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_user = models.IntegerField(default=0)
     question = models.CharField(max_length=50)
     description = models.TextField()
     created_at = models.DateTimeField(default=datetime.now())
@@ -93,7 +94,7 @@ class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='votes')
 
     class Meta:
-        unique_together = (('poll', 'choice'),)
+        unique_together = (('poll', 'choice', 'user'),)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} voted for {self.choice.text} in {self.poll.question}"

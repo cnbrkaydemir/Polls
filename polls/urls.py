@@ -13,4 +13,6 @@ urlpatterns = [
     path('poll/<int:poll_id>/', views.get_poll_detail, name='poll_detail'),
 
     path('login/', views.login_view, name='login'),
+
+    path('logout/', views.logout_view, name='logout'),
 ]
