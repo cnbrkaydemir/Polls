@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -80,6 +81,21 @@ def register(request):
 
         user = User.objects.create_user(first_name=first_name, last_name=last_name, email=email, password=password1, date_of_birth=date_of_birth, gender=gender)
         user.save()
-        return redirect("dashboard")
+        return redirect("login")
 
     return render(request, 'register.html')
+
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(email=email, password=password)
+
+        if user:
+            login(request, user)
+            return redirect('dashboard')
+        else:
+            error = "Password or Email is incorrect!"
+            return render(request, 'login.html', {'error': error})
+
+    return render(request, 'login.html')
