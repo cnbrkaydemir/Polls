@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-
+from django.contrib.auth.decorators import login_required
 from polls.models import User, Polls, Choices, Vote
 
 
@@ -10,13 +9,14 @@ from polls.models import User, Polls, Choices, Vote
 def home(request):
     return render(request, 'home.html')
 
-
+@login_required(login_url='login')
 def dashboard(request):
     polls = Polls.objects.all()
     user = request.user
-    return render(request, 'dashboard.html', {'polls': polls, 'user': user})
+    context = {'polls': polls, user: user}
+    return render(request, 'dashboard.html', context)
 
-
+@login_required(login_url='login')
 def create_poll(request):
     if request.method == 'POST':
         question = request.POST['question']
@@ -41,15 +41,13 @@ def create_poll(request):
 
     return render(request, "poll_create.html")
 
-
+@login_required(login_url='login')
 def get_poll_detail(request, poll_id):
     poll = get_object_or_404(Polls, pk=poll_id)
     user = request.user
     voted = Vote.objects.filter(user=user, poll=poll).count() >= 1
     user_choice = Vote.objects.filter(user=user, poll= poll).first().choice if voted else None
     completion = False
-
-
 
     if request.method == "POST":
         choice_id = request.POST.get("option")
@@ -62,9 +60,10 @@ def get_poll_detail(request, poll_id):
         voted = True
         completion = True
 
+    context = {"poll": poll, "voted": voted, "user_choice":user_choice, "completion":completion}
 
-    return render(request, "poll_detail.html",
-                  {"poll": poll, "voted": voted, "user_choice":user_choice, "completion":completion})
+    return render(request, "poll_detail.html",context)
+
 
 def register(request):
     if request.method == 'POST':
@@ -101,6 +100,7 @@ def login_view(request):
 
     return render(request, 'login.html')
 
+@login_required(login_url='login')
 def logout_view(request):
     logout(request)
     return redirect('home')
