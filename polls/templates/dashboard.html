@@ -15,7 +15,7 @@
     {% endif %}
 
     <!-- Create New Poll Button -->
-    <div class="text-center mb-4">
+    <div class="text-center mb-5">
         <a href="{% url 'poll_create' %}" class="btn btn-lg btn-success px-4">
             <i class="fas fa-plus-circle"></i> Create New Poll
         </a>
@@ -23,6 +23,8 @@
 
     <!-- Poll List -->
     {% if polls %}
+       <h4 class="mt-4">Active Polls</h4>
+        <hr class="my-3">
         <div class="row">
             {% for poll in polls %}
                 <div class="col-md-6 mb-4">
