@@ -8,23 +8,23 @@
     <form method="post">
         {% csrf_token %}
 
-        <div class="mb-3">
+        <div class="mb-3 mt-3">
             <label for="question" class="form-label">Poll Question</label>
-            <input type="text" name="question" id="question" class="form-control" required>
+            {{form.question}}
         </div>
 
         <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <input type="text" name="description" id="description" class="form-control" required>
+            {{form.description}}
         </div>
 
 
         <div class="mb-3">
             <label class="form-label">Options (Minimum 2)</label>
-            <input type="text" name="option1" class="form-control mb-2" placeholder="Option 1" required>
-            <input type="text" name="option2" class="form-control mb-2" placeholder="Option 2" required>
-            <input type="text" name="option3" class="form-control mb-2" placeholder="Option 3 (Optional)">
-            <input type="text" name="option4" class="form-control mb-2" placeholder="Option 4 (Optional)">
+            {{form.option1}}
+            {{form.option2}}
+            {{form.option3}}
+            {{form.option4}}
         </div>
 
         <button type="submit" class="btn btn-success">Create Poll</button>

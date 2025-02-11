@@ -6,43 +6,54 @@
 <div class="container d-flex justify-content-center align-items-center mb-4" style="min-height: 80vh;">
     <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
         <h3 class="text-center">Register</h3>
+
+         {% if error %}
+            <div class="alert alert-danger text-center" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+
         <form method="post">
             {% csrf_token %}
             
             <div class="mb-3">
-                <label for="first_name" class="form-label">Username</label>
-                <input type="text" name="first_name" id="first_name" class="form-control" required>
+                <label for="first_name" class="form-label">First Name</label>
+                {{form.first_name}}
             </div>
 
             <div class="mb-3">
-                <label for="last_name" class="form-label">Username</label>
-                <input type="text" name="last_name" id="last_name" class="form-control" required>
+                <label for="last_name" class="form-label">Last Name</label>
+                {{form.last_name}}
             </div>
             
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" name="email" id="email" class="form-control">
+                {{form.email}}
             </div>
 
              <div class="mb-3">
                 <label for="date_of_birth" class="form-label">Date Of Birth</label>
-                <input type="date" name="date_of_birth" id="date_of_birth" class="form-control" required>
+                {{form.date_of_birth}}
             </div>
 
-             <div class="mb-3">
+             <div class="mb-3 radio-group">
                 <label for="gender" class="form-label">Gender</label>
-                <input type="text" name="gender" id="gender" class="form-control" required>
+                {% for radio in form.gender %}
+            <div class="radio-item">
+                {{ radio.tag }}
+                <label for="{{ radio.id_for_label }}" class="form-check-label">{{ radio.choice_label }}</label>
             </div>
-
+        {% endfor %}
+            </div>
 
             <div class="mb-3">
-                <label for="password1" class="form-label">Password</label>
-                <input type="password" name="password1" id="password1" class="form-control" required>
+                <label for="password" class="form-label">Password</label>
+                {{form.password}}
             </div>
 
             <div class="mb-3">
                 <label for="password2" class="form-label">Confirm Password</label>
-                <input type="password" name="password2" id="password2" class="form-control" required>
+                {{form.password2}}
             </div>
             
             <button type="submit" class="btn btn-primary w-100">Register</button>

@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from polls.models import Polls, Choices, Vote
+from polls.forms import PollForm
 
-
-# Create your views here.
 
 def home(request):
     return render(request, 'home.html')
@@ -18,27 +17,27 @@ def dashboard(request):
 @login_required(login_url='login')
 def create_poll(request):
     if request.method == 'POST':
-        question = request.POST['question']
-        description = request.POST['description']
+        form = PollForm(request.POST)
         user = request.user
 
-        poll = Polls(question=question, description=description, created_user=user.id)
-        poll.save()
+        if form.is_valid():
+            poll = Polls(question=form.cleaned_data["question"], description=form.cleaned_data["description"], created_user=user.id)
+            poll.save()
 
-        options = [request.POST['option1'], request.POST['option2'], request.POST['option3'], request.POST['option4']]
+            options = [form.cleaned_data["option1"], form.cleaned_data["option2"],
+                       form.cleaned_data["option4"], form.cleaned_data["option4"]]
 
+            for option in options:
+                if option.strip():
+                    choice = Choices(text=option, poll=poll, votes=0)
+                    choice.save()
 
-        for option in options:
-            if option.strip():
-                choice = Choices(text=option, poll=poll, votes=0)
-                choice.save()
+            return redirect('dashboard')
 
+    form = PollForm()
+    context = {'form': form}
 
-
-        return redirect('dashboard')
-
-
-    return render(request, "poll_create.html")
+    return render(request, "poll_create.html", context)
 
 @login_required(login_url='login')
 def get_poll_detail(request, poll_id):
